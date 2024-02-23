@@ -1,245 +1,867 @@
 <!DOCTYPE html>
-<html data-bs-theme="auto" lang="en" style="background: #073763;">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+<html data-bs-theme="auto" lang="en" style="background: #073763">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
     <title>LSPD</title>
     <script>
-        (function() {
+      (function () {
+        // JavaScript snippet handling Dark/Light mode switching
 
-            // JavaScript snippet handling Dark/Light mode switching
+        const getStoredTheme = () => localStorage.getItem("theme");
+        const setStoredTheme = (theme) => localStorage.setItem("theme", theme);
+        const forcedTheme = document.documentElement.getAttribute(
+          "data-bss-forced-theme"
+        );
 
-            const getStoredTheme = () => localStorage.getItem('theme');
-            const setStoredTheme = theme => localStorage.setItem('theme', theme);
-            const forcedTheme = document.documentElement.getAttribute('data-bss-forced-theme');
+        const getPreferredTheme = () => {
+          if (forcedTheme) return forcedTheme;
 
-            const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme();
+          if (storedTheme) {
+            return storedTheme;
+          }
 
-                if (forcedTheme) return forcedTheme;
+          const pageTheme =
+            document.documentElement.getAttribute("data-bs-theme");
 
-                const storedTheme = getStoredTheme();
-                if (storedTheme) {
-                    return storedTheme;
-                }
+          if (pageTheme) {
+            return pageTheme;
+          }
 
-                const pageTheme = document.documentElement.getAttribute('data-bs-theme');
+          return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        };
 
-                if (pageTheme) {
-                    return pageTheme;
-                }
+        const setTheme = (theme) => {
+          if (
+            theme === "auto" &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+          ) {
+            document.documentElement.setAttribute("data-bs-theme", "dark");
+          } else {
+            document.documentElement.setAttribute("data-bs-theme", theme);
+          }
+        };
 
-                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            }
+        setTheme(getPreferredTheme());
 
-            const setTheme = theme => {
-                if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    document.documentElement.setAttribute('data-bs-theme', 'dark');
-                } else {
-                    document.documentElement.setAttribute('data-bs-theme', theme);
-                }
-            }
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitchers = [].slice.call(
+            document.querySelectorAll(".theme-switcher")
+          );
 
-            setTheme(getPreferredTheme());
+          if (!themeSwitchers.length) return;
 
-            const showActiveTheme = (theme, focus = false) => {
-                const themeSwitchers = [].slice.call(document.querySelectorAll('.theme-switcher'));
-
-                if (!themeSwitchers.length) return;
-
-                document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
-                    element.classList.remove('active');
-                    element.setAttribute('aria-pressed', 'false');
-                });
-
-                for (const themeSwitcher of themeSwitchers) {
-
-                    const btnToActivate = themeSwitcher.querySelector('[data-bs-theme-value="' + theme + '"]');
-
-                    if (btnToActivate) {
-                        btnToActivate.classList.add('active');
-                        btnToActivate.setAttribute('aria-pressed', 'true');
-                    }
-                }
-            }
-
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-                const storedTheme = getStoredTheme();
-                if (storedTheme !== 'light' && storedTheme !== 'dark') {
-                    setTheme(getPreferredTheme());
-                }
+          document
+            .querySelectorAll("[data-bs-theme-value]")
+            .forEach((element) => {
+              element.classList.remove("active");
+              element.setAttribute("aria-pressed", "false");
             });
 
-            window.addEventListener('DOMContentLoaded', () => {
-                showActiveTheme(getPreferredTheme());
+          for (const themeSwitcher of themeSwitchers) {
+            const btnToActivate = themeSwitcher.querySelector(
+              '[data-bs-theme-value="' + theme + '"]'
+            );
 
-                document.querySelectorAll('[data-bs-theme-value]')
-                    .forEach(toggle => {
-                        toggle.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            const theme = toggle.getAttribute('data-bs-theme-value');
-                            setStoredTheme(theme);
-                            setTheme(theme);
-                            showActiveTheme(theme);
-                        })
-                    })
+            if (btnToActivate) {
+              btnToActivate.classList.add("active");
+              btnToActivate.setAttribute("aria-pressed", "true");
+            }
+          }
+        };
+
+        window
+          .matchMedia("(prefers-color-scheme: dark)")
+          .addEventListener("change", () => {
+            const storedTheme = getStoredTheme();
+            if (storedTheme !== "light" && storedTheme !== "dark") {
+              setTheme(getPreferredTheme());
+            }
+          });
+
+        window.addEventListener("DOMContentLoaded", () => {
+          showActiveTheme(getPreferredTheme());
+
+          document
+            .querySelectorAll("[data-bs-theme-value]")
+            .forEach((toggle) => {
+              toggle.addEventListener("click", (e) => {
+                e.preventDefault();
+                const theme = toggle.getAttribute("data-bs-theme-value");
+                setStoredTheme(theme);
+                setTheme(theme);
+                showActiveTheme(theme);
+              });
             });
-        })();
+        });
+      })();
     </script>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&amp;display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kaushan+Script&amp;display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Allan&amp;display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amaranth&amp;display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Hanuman&amp;display=swap">
-    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/Projects-Grid-images.css">
-</head>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Montserrat:400,700&amp;display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Kaushan+Script&amp;display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Allan&amp;display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Amaranth&amp;display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Hanuman&amp;display=swap"
+    />
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css" />
+    <link rel="stylesheet" href="assets/css/Projects-Grid-images.css" />
+  </head>
 
-<body id="inicio" data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="54" style="background: rgba(73,116,165,0);">
-    <nav class="navbar navbar-expand-lg fixed-top bg-transparent navbar-dark" id="mainNav">
-        <div class="container"><a class="navbar-brand" href="#inicio"><img src="assets/img/LSPD.png" style="width: 60px;"></a><button data-bs-toggle="collapse" data-bs-target="#navbarResponsive" class="navbar-toggler navbar-toggler-right" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-th-large"></i></button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto text-uppercase">
-                    <li class="nav-item"><a class="nav-link text-capitalize" href="#services"></a></li>
-                </ul>
-            </div>
+  <body
+    id="inicio"
+    data-bs-spy="scroll"
+    data-bs-target="#mainNav"
+    data-bs-offset="54"
+    style="background: rgba(73, 116, 165, 0)"
+  >
+    <nav
+      class="navbar navbar-expand-lg fixed-top bg-transparent navbar-dark"
+      id="mainNav"
+    >
+      <div class="container">
+        <a class="navbar-brand" href="#inicio"
+          ><img src="assets/img/LSPD.png" style="width: 60px" /></a
+        ><button
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarResponsive"
+          class="navbar-toggler navbar-toggler-right"
+          type="button"
+          aria-controls="navbarResponsive"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <i class="fa fa-th-large"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ms-auto text-uppercase">
+            <li class="nav-item">
+              <a class="nav-link text-capitalize" href="#services"></a>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
-    <section id="portfolio" style="padding-top: 0px;background: #073763;--bs-body-bg: #4974a5;margin-top: 125px;">
-        <div class="container py-4 py-xl-5">
-            <div class="row d-sm-flex justify-content-sm-center mb-5">
-                <div class="col-md-8 col-xl-6 text-center mx-auto">
-                    <h2 class="text-uppercase" style="margin-bottom: 0px;color: #cfcfcf;">LSPD</h2>
-                </div>
-            </div>
-            <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-sm-flex d-xl-flex justify-content-sm-center justify-content-xl-center">
-                <div class="col-sm-6 col-md-4 portfolio-item" style="height: 110px;"><a class="portfolio-link" href="https://docs.google.com/spreadsheets/d/1XRXuWmyi0LYx4P5CWmT04G5hmrocTadAyDmLCwDgKd8/edit#gid=1784412306" style="text-decoration: none;">
-                        <div class="portfolio-caption" style="background: #cfcfcf;overflow: clip;height: 110px;">
-                            <div>
-                                <h4 style="color: #000000;font-family: Montserrat, sans-serif;font-weight: bold;">Registro</h4>
-                                <p class="fw-bold text-black order-first" style="z-index: 2;font-weight: bold;position: sticky;">Registro de oficiais</p>
-                            </div><img class="d-flex" src="assets/img/LSPD.png" style="z-index: 0;width: 126px;margin-top: -52px;margin-right: 0px;opacity: 0.45;position: relative;transform: perspective(0px);display: inline-flex;font-family: Montserrat, sans-serif;float: right;">
-                        </div>
-                    </a></div>
-                <div class="col-sm-6 col-md-4 portfolio-item" style="height: 110px;"><a class="portfolio-link" href="https://docs.google.com/spreadsheets/d/1Oew8aZ6Rdq-vc-UL3_aF91jRGNr93UCTK4conFaqVho/edit?usp=sharing" style="text-decoration: none;">
-                        <div class="portfolio-caption" style="background: #cfcfcf;overflow: clip;height: 110px;">
-                            <div>
-                                <h4 style="color: #000000;font-family: Montserrat, sans-serif;font-weight: bold;">Calendario</h4>
-                                <p class="fw-bold text-black order-first" style="z-index: 2;font-weight: bold;position: sticky;">Treinamentos e eventos&nbsp;</p>
-                            </div><img class="d-flex" src="assets/img/LSPD.png" style="z-index: 0;width: 126px;margin-top: -52px;margin-right: 0px;opacity: 0.45;position: relative;transform: perspective(0px);display: inline-flex;float: right;">
-                        </div>
-                    </a></div>
-            </div>
+    <section
+      id="portfolio"
+      style="
+        padding-top: 0px;
+        background: #073763;
+        --bs-body-bg: #4974a5;
+        margin-top: 125px;
+      "
+    >
+      <div class="container py-4 py-xl-5">
+        <div class="row d-sm-flex justify-content-sm-center mb-5">
+          <div class="col-md-8 col-xl-6 text-center mx-auto">
+            <h2
+              class="text-uppercase"
+              style="margin-bottom: 0px; color: #cfcfcf"
+            >
+              LSPD
+            </h2>
+          </div>
         </div>
-        <div class="container py-4 py-xl-5">
-            <div class="row mb-5">
-                <div class="col-md-8 col-xl-6 text-center mx-auto">
-                    <h2 class="text-uppercase" style="margin-bottom: 0px;color: #cfcfcf;">Informativos</h2>
+        <div
+          class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-sm-flex d-xl-flex justify-content-sm-center justify-content-xl-center"
+        >
+          <div class="col-sm-6 col-md-4 portfolio-item" style="height: 110px">
+            <a
+              class="portfolio-link"
+              href="https://docs.google.com/spreadsheets/d/1XRXuWmyi0LYx4P5CWmT04G5hmrocTadAyDmLCwDgKd8/edit#gid=1784412306"
+              style="text-decoration: none"
+            >
+              <div
+                class="portfolio-caption"
+                style="background: #cfcfcf; overflow: clip; height: 110px"
+              >
+                <div>
+                  <h4
+                    style="
+                      color: #000000;
+                      font-family: Montserrat, sans-serif;
+                      font-weight: bold;
+                    "
+                  >
+                    Registro
+                  </h4>
+                  <p
+                    class="fw-bold text-black order-first"
+                    style="z-index: 2; font-weight: bold; position: sticky"
+                  >
+                    Registro de oficiais
+                  </p>
                 </div>
-            </div>
-            <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-sm-flex d-xl-flex justify-content-sm-center justify-content-xl-center align-items-xl-center">
-                <div class="col-sm-6 col-md-4 portfolio-item" style="height: 110px;margin-bottom: 15px;"><a class="portfolio-link" href="https://bcso.netlify.app/" style="text-decoration: none;">
-                        <div class="portfolio-caption" style="background: #cfcfcf;overflow: clip;height: 110px;">
-                            <div>
-                                <h4 style="color: #000000;font-family: Hanuman, serif;font-weight: bold;">BCSO</h4>
-                                <p class="fw-bold text-black order-first" style="z-index: 2;font-weight: bold;position: sticky;">Site de informações</p>
-                            </div><img class="d-flex" src="assets/img/BCSO.png" style="z-index: 0;width: 126px;margin-top: -52px;margin-right: 0px;opacity: 0.25;position: relative;transform: perspective(0px);float: right;">
-                        </div>
-                    </a></div>
-                <div class="col-sm-6 col-md-4 portfolio-item" style="height: 110px;margin-bottom: 15px;"><a class="portfolio-link" href="https://kamikazelspd.gitbook.io/lspd-manual/" style="text-decoration: none;">
-                        <div class="portfolio-caption" style="background: #cfcfcf;overflow: clip;height: 110px;">
-                            <div>
-                                <h4 style="color: #000000;font-family: Montserrat, sans-serif;font-weight: bold;"><strong>LSPD</strong></h4>
-                                <p class="fw-bold text-black order-first" style="z-index: 2;font-weight: bold;position: sticky;"><strong>Manual da policia</strong></p>
-                            </div><img class="d-flex" src="assets/img/LSPD.png" style="z-index: 0;width: 126px;margin-top: -52px;margin-right: 0px;opacity: 0.25;position: relative;transform: perspective(0px);display: inline-flex;float: right;height: 126px;">
-                        </div>
-                    </a></div>
-                <div class="col-sm-6 col-md-4 portfolio-item" style="height: 110px;margin-bottom: 15px;"><a class="portfolio-link" href="https://kamikazelspd.gitbook.io/sadfw-guia-de-estudos/" style="text-decoration: none;">
-                        <div class="portfolio-caption" style="background: #cfcfcf;overflow: clip;height: 110px;">
-                            <div>
-                                <h4 style="color: #000000;font-family: 'Kaushan Script', serif;font-weight: bold;">SADFW</h4>
-                                <p class="fw-bold text-black order-first" style="z-index: 2;font-weight: bold;position: sticky;">Guia de estudos</p>
-                            </div><img class="d-flex" src="assets/img/SADFW.png" style="z-index: 0;margin-top: -52px;margin-right: 0px;opacity: 0.25;position: relative;transform: perspective(0px);display: inline-flex;float: right;height: 126px;">
-                        </div>
-                    </a></div>
-            </div>
-        </div>
-        <div class="container py-4 py-xl-5">
-            <div class="row d-sm-flex justify-content-sm-center mb-5">
-                <div class="col-md-8 col-xl-6 text-center mx-auto">
-                    <h2 class="text-uppercase" style="margin-bottom: 0px;color: #cfcfcf;">Manuais</h2>
+                <img
+                  class="d-flex"
+                  src="assets/img/LSPD.png"
+                  style="
+                    z-index: 0;
+                    width: 126px;
+                    margin-top: -52px;
+                    margin-right: 0px;
+                    opacity: 0.45;
+                    position: relative;
+                    transform: perspective(0px);
+                    display: inline-flex;
+                    font-family: Montserrat, sans-serif;
+                    float: right;
+                  "
+                />
+              </div>
+            </a>
+          </div>
+          <div class="col-sm-6 col-md-4 portfolio-item" style="height: 110px">
+            <a
+              class="portfolio-link"
+              href="https://docs.google.com/spreadsheets/d/1Oew8aZ6Rdq-vc-UL3_aF91jRGNr93UCTK4conFaqVho/edit?usp=sharing"
+              style="text-decoration: none"
+            >
+              <div
+                class="portfolio-caption"
+                style="background: #cfcfcf; overflow: clip; height: 110px"
+              >
+                <div>
+                  <h4
+                    style="
+                      color: #000000;
+                      font-family: Montserrat, sans-serif;
+                      font-weight: bold;
+                    "
+                  >
+                    Calendario
+                  </h4>
+                  <p
+                    class="fw-bold text-black order-first"
+                    style="z-index: 2; font-weight: bold; position: sticky"
+                  >
+                    Treinamentos e eventos&nbsp;
+                  </p>
                 </div>
-            </div>
-            <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-sm-flex d-xl-flex justify-content-sm-center justify-content-xl-center align-items-xl-center">
-                <div class="col-sm-6 col-md-4 portfolio-item" style="height: 110px;margin-bottom: 15px;"><a class="portfolio-link" href="https://kamikazelspd.gitbook.io/lspd-guia-de-estudos-para-cadetes/" style="text-decoration: none;">
-                        <div class="portfolio-caption" style="background: #cfcfcf;overflow: clip;height: 110px;">
-                            <div>
-                                <h4 style="color: #000000;font-family: Montserrat, sans-serif;font-weight: bold;"><strong>FTU</strong></h4>
-                                <p class="fw-bold text-black order-first" style="z-index: 2;font-weight: bold;position: sticky;"><strong>Manual para cadetes</strong></p>
-                            </div><img class="d-flex" src="assets/img/LSPD.png" style="z-index: 0;width: 126px;margin-top: -52px;margin-right: 0px;opacity: 0.25;position: relative;transform: perspective(0px);display: inline-flex;float: right;height: 126px;">
-                        </div>
-                    </a></div>
-                <div class="col-sm-6 col-md-4 portfolio-item" style="height: 110px;margin-bottom: 15px;"><a class="portfolio-link" href="https://kamikazelspd.gitbook.io/noose-manual-auxiliar-operacionall/" style="text-decoration: none;">
-                        <div class="portfolio-caption" style="background: #cfcfcf;overflow: clip;height: 110px;">
-                            <div>
-                                <h4 style="color: #000000;font-family: Montserrat, sans-serif;font-weight: bold;">NOOSE</h4>
-                                <p class="fw-bold text-black order-first" style="z-index: 2;font-weight: bold;position: sticky;color: rgb(33,37,41);">Manual de operações</p>
-                            </div><img class="d-flex" src="assets/img/NOOSE.png" style="z-index: 0;width: 126px;margin-top: -52px;margin-right: 0px;opacity: 0.25;position: relative;transform: perspective(0px);float: right;">
-                        </div>
-                    </a></div>
-                <div class="col-sm-6 col-md-4 portfolio-item" style="height: 110px;margin-bottom: 15px;"><a class="portfolio-link" href="https://kamikazelspd.gitbook.io/hspu-curso/" style="text-decoration: none;">
-                        <div class="portfolio-caption" style="background: #cfcfcf;overflow: clip;height: 110px;">
-                            <div>
-                                <h4 style="color: #000000;font-family: Montserrat, sans-serif;font-weight: bold;">HSPU</h4>
-                                <p class="fw-bold text-black order-first" style="z-index: 2;font-weight: bold;position: sticky;">Manual HSPU</p>
-                            </div><img class="d-flex" src="assets/img/LSPD.png" style="z-index: 0;margin-top: -52px;margin-right: 0px;opacity: 0.25;position: relative;transform: perspective(0px);display: inline-flex;float: right;height: 126px;">
-                        </div>
-                    </a></div>
-                <div class="col-sm-6 col-md-4 portfolio-item" style="height: 110px;margin-bottom: 15px;"><a class="portfolio-link" href="https://kamikazelspd.gitbook.io/mu-regras/" style="text-decoration: none;">
-                        <div class="portfolio-caption" style="background: #cfcfcf;overflow: clip;height: 110px;">
-                            <div>
-                                <h4 style="color: #000000;font-family: Montserrat, sans-serif;font-weight: bold;">MU</h4>
-                                <p class="fw-bold text-black order-first" style="z-index: 2;font-weight: bold;position: sticky;">Manual MU</p>
-                            </div><img class="d-flex" src="assets/img/LSPD.png" style="z-index: 0;margin-top: -52px;margin-right: 0px;opacity: 0.25;position: relative;transform: perspective(0px);display: inline-flex;float: right;height: 126px;">
-                        </div>
-                    </a></div>
-                <div class="col-sm-6 col-md-4 portfolio-item" style="height: 110px;margin-bottom: 15px;"><a class="portfolio-link" href="https://kamikazelspd.gitbook.io/asd-regras/" style="text-decoration: none;">
-                        <div class="portfolio-caption" style="background: #cfcfcf;overflow: clip;height: 110px;">
-                            <div>
-                                <h4 style="color: #000000;font-family: Montserrat, sans-serif;font-weight: bold;">ASD</h4>
-                                <p class="fw-bold text-black order-first" style="z-index: 2;font-weight: bold;position: sticky;">Manual ASD</p>
-                            </div><img class="d-flex" src="assets/img/LSPD.png" style="z-index: 0;margin-top: -52px;margin-right: 0px;opacity: 0.25;position: relative;transform: perspective(0px);display: inline-flex;float: right;height: 126px;">
-                        </div>
-                    </a></div>
-                <div class="col-sm-6 col-md-4 portfolio-item" style="height: 110px;margin-bottom: 15px;"><a class="portfolio-link" href="https://kamikazelspd.gitbook.io/dispatch-guia-basico/" style="text-decoration: none;">
-                        <div class="portfolio-caption" style="background: #cfcfcf;overflow: clip;height: 110px;">
-                            <div>
-                                <h4 style="color: #000000;font-family: Montserrat, sans-serif;font-weight: bold;">Dispatch</h4>
-                                <p class="fw-bold text-black order-first" style="z-index: 2;font-weight: bold;position: sticky;">Guia básico Dispatch</p>
-                            </div><img class="d-flex" src="assets/img/63d3c15e-cb27-4017-b2b5-957817b7b392.png" style="z-index: 0;margin-top: -52px;margin-right: 0px;opacity: 0.25;position: relative;transform: perspective(0px);display: inline-flex;float: right;height: 126px;">
-                        </div>
-                    </a></div>
-                <div class="col-sm-6 col-md-4 portfolio-item" style="height: 110px;margin-bottom: 15px;display: none;"><a class="portfolio-link" href="https://kamikaze-1.gitbook.io/crash-manual-geral/" style="text-decoration: none;">
-                        <div class="portfolio-caption" style="background: #cfcfcf;overflow: clip;height: 110px;">
-                            <div>
-                                <h4 style="color: #000000;font-family: Montserrat, sans-serif;font-weight: bold;">CRASH</h4>
-                                <p class="text-muted order-first" style="z-index: 2;font-weight: bold;position: sticky;">Manual CRASH</p>
-                            </div><img class="d-flex" src="assets/img/OIP-removebg-preview.png" style="z-index: 0;margin-top: -40px;margin-right: 0px;opacity: 0.45;position: relative;transform: perspective(0px);display: inline-flex;float: right;width: 126px;">
-                        </div>
-                    </a></div>
-            </div>
+                <img
+                  class="d-flex"
+                  src="assets/img/LSPD.png"
+                  style="
+                    z-index: 0;
+                    width: 126px;
+                    margin-top: -52px;
+                    margin-right: 0px;
+                    opacity: 0.45;
+                    position: relative;
+                    transform: perspective(0px);
+                    display: inline-flex;
+                    float: right;
+                  "
+                />
+              </div>
+            </a>
+          </div>
         </div>
+      </div>
+      <div class="container py-4 py-xl-5">
+        <div class="row mb-5">
+          <div class="col-md-8 col-xl-6 text-center mx-auto">
+            <h2
+              class="text-uppercase"
+              style="margin-bottom: 0px; color: #cfcfcf"
+            >
+              Informativos
+            </h2>
+          </div>
+        </div>
+        <div
+          class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-sm-flex d-xl-flex justify-content-sm-center justify-content-xl-center align-items-xl-center"
+        >
+          <div
+            class="col-sm-6 col-md-4 portfolio-item"
+            style="height: 110px; margin-bottom: 15px"
+          >
+            <a
+              class="portfolio-link"
+              href="https://bcso.netlify.app/"
+              style="text-decoration: none"
+            >
+              <div
+                class="portfolio-caption"
+                style="background: #cfcfcf; overflow: clip; height: 110px"
+              >
+                <div>
+                  <h4
+                    style="
+                      color: #000000;
+                      font-family: Hanuman, serif;
+                      font-weight: bold;
+                    "
+                  >
+                    BCSO
+                  </h4>
+                  <p
+                    class="fw-bold text-black order-first"
+                    style="z-index: 2; font-weight: bold; position: sticky"
+                  >
+                    Site de informações
+                  </p>
+                </div>
+                <img
+                  class="d-flex"
+                  src="assets/img/BCSO.png"
+                  style="
+                    z-index: 0;
+                    width: 126px;
+                    margin-top: -52px;
+                    margin-right: 0px;
+                    opacity: 0.25;
+                    position: relative;
+                    transform: perspective(0px);
+                    float: right;
+                  "
+                />
+              </div>
+            </a>
+          </div>
+          <div
+            class="col-sm-6 col-md-4 portfolio-item"
+            style="height: 110px; margin-bottom: 15px"
+          >
+            <a
+              class="portfolio-link"
+              href="https://kamikazelspd.gitbook.io/lspd-manual/"
+              style="text-decoration: none"
+            >
+              <div
+                class="portfolio-caption"
+                style="background: #cfcfcf; overflow: clip; height: 110px"
+              >
+                <div>
+                  <h4
+                    style="
+                      color: #000000;
+                      font-family: Montserrat, sans-serif;
+                      font-weight: bold;
+                    "
+                  >
+                    <strong>LSPD</strong>
+                  </h4>
+                  <p
+                    class="fw-bold text-black order-first"
+                    style="z-index: 2; font-weight: bold; position: sticky"
+                  >
+                    <strong>Manual da policia</strong>
+                  </p>
+                </div>
+                <img
+                  class="d-flex"
+                  src="assets/img/LSPD.png"
+                  style="
+                    z-index: 0;
+                    width: 126px;
+                    margin-top: -52px;
+                    margin-right: 0px;
+                    opacity: 0.25;
+                    position: relative;
+                    transform: perspective(0px);
+                    display: inline-flex;
+                    float: right;
+                    height: 126px;
+                  "
+                />
+              </div>
+            </a>
+          </div>
+          <div
+            class="col-sm-6 col-md-4 portfolio-item"
+            style="height: 110px; margin-bottom: 15px"
+          >
+            <a
+              class="portfolio-link"
+              href="https://kamikazelspd.gitbook.io/sadfw-guia-de-estudos/"
+              style="text-decoration: none"
+            >
+              <div
+                class="portfolio-caption"
+                style="background: #cfcfcf; overflow: clip; height: 110px"
+              >
+                <div>
+                  <h4
+                    style="
+                      color: #000000;
+                      font-family: 'Kaushan Script', serif;
+                      font-weight: bold;
+                    "
+                  >
+                    SADFW
+                  </h4>
+                  <p
+                    class="fw-bold text-black order-first"
+                    style="z-index: 2; font-weight: bold; position: sticky"
+                  >
+                    Guia de estudos
+                  </p>
+                </div>
+                <img
+                  class="d-flex"
+                  src="assets/img/SADFW.png"
+                  style="
+                    z-index: 0;
+                    margin-top: -52px;
+                    margin-right: 0px;
+                    opacity: 0.25;
+                    position: relative;
+                    transform: perspective(0px);
+                    display: inline-flex;
+                    float: right;
+                    height: 126px;
+                  "
+                />
+              </div>
+            </a>
+          </div>
+          <div
+            class="col-sm-6 col-md-4 portfolio-item"
+            style="height: 110px; margin-bottom: 15px"
+          >
+            <a
+              class="portfolio-link"
+              href="https://kamikazelspd.gitbook.io/sahp-guia-basico/"
+              style="text-decoration: none"
+            >
+              <div
+                class="portfolio-caption"
+                style="background: #cfcfcf; overflow: clip; height: 110px"
+              >
+                <div>
+                  <h4
+                    style="
+                      color: #000000;
+                      font-family:'Times New Roman', Times, serif
+                      font-weight: bold;
+                    "
+                  >
+                    SAHP
+                  </h4>
+                  <p
+                    class="fw-bold text-black order-first"
+                    style="z-index: 2; font-weight: bold; position: sticky"
+                  >
+                    Guia de estudos
+                  </p>
+                </div>
+                <img
+                  class="d-flex"
+                  src="assets/img/SAHP.png"
+                  style="
+                    z-index: 0;
+                    margin-top: -52px;
+                    margin-right: 0px;
+                    opacity: 0.25;
+                    position: relative;
+                    transform: perspective(0px);
+                    display: inline-flex;
+                    float: right;
+                    height: 126px;
+                  "
+                />
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="container py-4 py-xl-5">
+        <div class="row d-sm-flex justify-content-sm-center mb-5">
+          <div class="col-md-8 col-xl-6 text-center mx-auto">
+            <h2
+              class="text-uppercase"
+              style="margin-bottom: 0px; color: #cfcfcf"
+            >
+              Manuais
+            </h2>
+          </div>
+        </div>
+        <div
+          class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-sm-flex d-xl-flex justify-content-sm-center justify-content-xl-center align-items-xl-center"
+        >
+          <div
+            class="col-sm-6 col-md-4 portfolio-item"
+            style="height: 110px; margin-bottom: 15px"
+          >
+            <a
+              class="portfolio-link"
+              href="https://kamikazelspd.gitbook.io/lspd-guia-de-estudos-para-cadetes/"
+              style="text-decoration: none"
+            >
+              <div
+                class="portfolio-caption"
+                style="background: #cfcfcf; overflow: clip; height: 110px"
+              >
+                <div>
+                  <h4
+                    style="
+                      color: #000000;
+                      font-family: Montserrat, sans-serif;
+                      font-weight: bold;
+                    "
+                  >
+                    <strong>FTU</strong>
+                  </h4>
+                  <p
+                    class="fw-bold text-black order-first"
+                    style="z-index: 2; font-weight: bold; position: sticky"
+                  >
+                    <strong>Manual para cadetes</strong>
+                  </p>
+                </div>
+                <img
+                  class="d-flex"
+                  src="assets/img/LSPD.png"
+                  style="
+                    z-index: 0;
+                    width: 126px;
+                    margin-top: -52px;
+                    margin-right: 0px;
+                    opacity: 0.25;
+                    position: relative;
+                    transform: perspective(0px);
+                    display: inline-flex;
+                    float: right;
+                    height: 126px;
+                  "
+                />
+              </div>
+            </a>
+          </div>
+          <div
+            class="col-sm-6 col-md-4 portfolio-item"
+            style="height: 110px; margin-bottom: 15px"
+          >
+            <a
+              class="portfolio-link"
+              href="https://kamikazelspd.gitbook.io/noose-manual-auxiliar-operacionall/"
+              style="text-decoration: none"
+            >
+              <div
+                class="portfolio-caption"
+                style="background: #cfcfcf; overflow: clip; height: 110px"
+              >
+                <div>
+                  <h4
+                    style="
+                      color: #000000;
+                      font-family: Montserrat, sans-serif;
+                      font-weight: bold;
+                    "
+                  >
+                    NOOSE
+                  </h4>
+                  <p
+                    class="fw-bold text-black order-first"
+                    style="
+                      z-index: 2;
+                      font-weight: bold;
+                      position: sticky;
+                      color: rgb(33, 37, 41);
+                    "
+                  >
+                    Manual de operações
+                  </p>
+                </div>
+                <img
+                  class="d-flex"
+                  src="assets/img/NOOSE.png"
+                  style="
+                    z-index: 0;
+                    width: 126px;
+                    margin-top: -52px;
+                    margin-right: 0px;
+                    opacity: 0.25;
+                    position: relative;
+                    transform: perspective(0px);
+                    float: right;
+                  "
+                />
+              </div>
+            </a>
+          </div>
+          <div
+            class="col-sm-6 col-md-4 portfolio-item"
+            style="height: 110px; margin-bottom: 15px"
+          >
+            <a
+              class="portfolio-link"
+              href="https://kamikazelspd.gitbook.io/hspu-curso/"
+              style="text-decoration: none"
+            >
+              <div
+                class="portfolio-caption"
+                style="background: #cfcfcf; overflow: clip; height: 110px"
+              >
+                <div>
+                  <h4
+                    style="
+                      color: #000000;
+                      font-family: Montserrat, sans-serif;
+                      font-weight: bold;
+                    "
+                  >
+                    HSPU
+                  </h4>
+                  <p
+                    class="fw-bold text-black order-first"
+                    style="z-index: 2; font-weight: bold; position: sticky"
+                  >
+                    Manual HSPU
+                  </p>
+                </div>
+                <img
+                  class="d-flex"
+                  src="assets/img/LSPD.png"
+                  style="
+                    z-index: 0;
+                    margin-top: -52px;
+                    margin-right: 0px;
+                    opacity: 0.25;
+                    position: relative;
+                    transform: perspective(0px);
+                    display: inline-flex;
+                    float: right;
+                    height: 126px;
+                  "
+                />
+              </div>
+            </a>
+          </div>
+          <div
+            class="col-sm-6 col-md-4 portfolio-item"
+            style="height: 110px; margin-bottom: 15px"
+          >
+            <a
+              class="portfolio-link"
+              href="https://kamikazelspd.gitbook.io/mu-regras/"
+              style="text-decoration: none"
+            >
+              <div
+                class="portfolio-caption"
+                style="background: #cfcfcf; overflow: clip; height: 110px"
+              >
+                <div>
+                  <h4
+                    style="
+                      color: #000000;
+                      font-family: Montserrat, sans-serif;
+                      font-weight: bold;
+                    "
+                  >
+                    MU
+                  </h4>
+                  <p
+                    class="fw-bold text-black order-first"
+                    style="z-index: 2; font-weight: bold; position: sticky"
+                  >
+                    Manual MU
+                  </p>
+                </div>
+                <img
+                  class="d-flex"
+                  src="assets/img/LSPD.png"
+                  style="
+                    z-index: 0;
+                    margin-top: -52px;
+                    margin-right: 0px;
+                    opacity: 0.25;
+                    position: relative;
+                    transform: perspective(0px);
+                    display: inline-flex;
+                    float: right;
+                    height: 126px;
+                  "
+                />
+              </div>
+            </a>
+          </div>
+          <div
+            class="col-sm-6 col-md-4 portfolio-item"
+            style="height: 110px; margin-bottom: 15px"
+          >
+            <a
+              class="portfolio-link"
+              href="https://kamikazelspd.gitbook.io/asd-regras/"
+              style="text-decoration: none"
+            >
+              <div
+                class="portfolio-caption"
+                style="background: #cfcfcf; overflow: clip; height: 110px"
+              >
+                <div>
+                  <h4
+                    style="
+                      color: #000000;
+                      font-family: Montserrat, sans-serif;
+                      font-weight: bold;
+                    "
+                  >
+                    ASD
+                  </h4>
+                  <p
+                    class="fw-bold text-black order-first"
+                    style="z-index: 2; font-weight: bold; position: sticky"
+                  >
+                    Manual ASD
+                  </p>
+                </div>
+                <img
+                  class="d-flex"
+                  src="assets/img/LSPD.png"
+                  style="
+                    z-index: 0;
+                    margin-top: -52px;
+                    margin-right: 0px;
+                    opacity: 0.25;
+                    position: relative;
+                    transform: perspective(0px);
+                    display: inline-flex;
+                    float: right;
+                    height: 126px;
+                  "
+                />
+              </div>
+            </a>
+          </div>
+          <div
+            class="col-sm-6 col-md-4 portfolio-item"
+            style="height: 110px; margin-bottom: 15px"
+          >
+            <a
+              class="portfolio-link"
+              href="https://kamikazelspd.gitbook.io/dispatch-guia-basico/"
+              style="text-decoration: none"
+            >
+              <div
+                class="portfolio-caption"
+                style="background: #cfcfcf; overflow: clip; height: 110px"
+              >
+                <div>
+                  <h4
+                    style="
+                      color: #000000;
+                      font-family: Montserrat, sans-serif;
+                      font-weight: bold;
+                    "
+                  >
+                    Dispatch
+                  </h4>
+                  <p
+                    class="fw-bold text-black order-first"
+                    style="z-index: 2; font-weight: bold; position: sticky"
+                  >
+                    Guia básico Dispatch
+                  </p>
+                </div>
+                <img
+                  class="d-flex"
+                  src="assets/img/63d3c15e-cb27-4017-b2b5-957817b7b392.png"
+                  style="
+                    z-index: 0;
+                    margin-top: -52px;
+                    margin-right: 0px;
+                    opacity: 0.25;
+                    position: relative;
+                    transform: perspective(0px);
+                    display: inline-flex;
+                    float: right;
+                    height: 126px;
+                  "
+                />
+              </div>
+            </a>
+          </div>
+          <div
+            class="col-sm-6 col-md-4 portfolio-item"
+            style="height: 110px; margin-bottom: 15px; display: none"
+          >
+            <a
+              class="portfolio-link"
+              href="https://kamikaze-1.gitbook.io/crash-manual-geral/"
+              style="text-decoration: none"
+            >
+              <div
+                class="portfolio-caption"
+                style="background: #cfcfcf; overflow: clip; height: 110px"
+              >
+                <div>
+                  <h4
+                    style="
+                      color: #000000;
+                      font-family: Montserrat, sans-serif;
+                      font-weight: bold;
+                    "
+                  >
+                    CRASH
+                  </h4>
+                  <p
+                    class="text-muted order-first"
+                    style="z-index: 2; font-weight: bold; position: sticky"
+                  >
+                    Manual CRASH
+                  </p>
+                </div>
+                <img
+                  class="d-flex"
+                  src="assets/img/OIP-removebg-preview.png"
+                  style="
+                    z-index: 0;
+                    margin-top: -40px;
+                    margin-right: 0px;
+                    opacity: 0.45;
+                    position: relative;
+                    transform: perspective(0px);
+                    display: inline-flex;
+                    float: right;
+                    width: 126px;
+                  "
+                />
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
     </section>
-    <footer class="fixed-bottom" style="padding-top: 0px;padding-bottom: 0px;">
-        <div class="container">
-            <div class="row d-xl-flex d-xxl-flex justify-content-xl-center align-items-xl-center justify-content-xxl-center" style="text-align: center;">
-                <div class="col-md-4" style="color: #cfcfcf;"><a href="https://youtu.be/nNew3HSJ-Z0" style="text-decoration: none;"><span class="copyright" style="text-decoration: none;color: rgb(255,255,255);">Site criado por Bruno Daniotti Miranda</span></a></div>
-            </div>
+    <footer class="fixed-bottom" style="padding-top: 0px; padding-bottom: 0px">
+      <div class="container">
+        <div
+          class="row d-xl-flex d-xxl-flex justify-content-xl-center align-items-xl-center justify-content-xxl-center"
+          style="text-align: center"
+        >
+          <div class="col-md-4" style="color: #cfcfcf">
+            <a href="https://youtu.be/nNew3HSJ-Z0" style="text-decoration: none"
+              ><span
+                class="copyright"
+                style="text-decoration: none; color: rgb(255, 255, 255)"
+                >Site criado por Bruno Daniotti Miranda</span
+              ></a
+            >
+          </div>
         </div>
+      </div>
     </footer>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/agency.js"></script>
-</body>
-
+  </body>
 </html>
